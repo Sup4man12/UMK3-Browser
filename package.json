@@ -1,0 +1,22 @@
+{
+  "name": "umk3-online",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/web",
+    "shared/protocol"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "build:wasm": "./emulator/build-wasm.sh",
+    "dev": "npm run dev -w @umk3/web",
+    "dev:lan": "npm run dev:lan -w @umk3/web",
+    "dev:api": "cd apps/api && ./mvnw -q spring-boot:run",
+    "build": "npm run build -w @umk3/web",
+    "typecheck": "npm run typecheck --workspaces",
+    "test": "npm run test --workspaces",
+    "test:api": "cd apps/api && ./mvnw -q -B test"
+  }
+}

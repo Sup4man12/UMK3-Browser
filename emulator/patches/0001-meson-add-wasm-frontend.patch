@@ -1,0 +1,35 @@
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -1,6 +1,6 @@
+ option('frontend',
+     type: 'combo',
+-    choices: ['auto', 'sdl2', 'win32', 'qt', 'macos', 'pi', 'psp'],
++    choices: ['auto', 'sdl2', 'win32', 'qt', 'macos', 'pi', 'psp', 'wasm'],
+     value: 'auto',
+     description: 'Frontend implementation to build')
+ option('include_7z', type: 'boolean', value: true, description: 'Include 7-zip archive support')
+--- a/meson.build
++++ b/meson.build
+@@ -44,6 +44,7 @@
+     'macos': 'macos',
+     'pi': 'pi',
+     'psp': 'psp',
++    'wasm': 'wasm',
+ }
+ 
+ # Build-selection macro for the active frontend, defined once here and threaded
+@@ -248,6 +249,14 @@
+ 
+ subdir('src/burn/drv')
+ 
++# UMK3 Plus Online: the 'wasm' frontend links only the emulation libraries
++# (cpu/burn/devices/snd/drv) with its own minimal frontend. It does not use the
++# desktop burner layer (zip/7z loaders, CHD, Lua, video/audio interfaces).
++if frontend == 'wasm'
++    subdir('src/burner/wasm')
++    subdir_done()
++endif
++
+ subdir('src/dep/libs/zlib')
+ subdir('src/dep/libs/lua')
+ subdir('src/dep/libs/libchdr')

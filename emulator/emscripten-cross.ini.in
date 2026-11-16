@@ -1,0 +1,14 @@
+# Meson cross file for Emscripten. build-wasm.sh replaces @EMSCRIPTEN_ROOT@
+# with the activated emsdk's upstream/emscripten directory.
+
+[binaries]
+c = '@EMSCRIPTEN_ROOT@/emcc'
+cpp = '@EMSCRIPTEN_ROOT@/em++'
+ar = '@EMSCRIPTEN_ROOT@/emar'
+ranlib = '@EMSCRIPTEN_ROOT@/emranlib'
+
+[host_machine]
+system = 'emscripten'
+cpu_family = 'wasm32'
+cpu = 'wasm32'
+endian = 'little'

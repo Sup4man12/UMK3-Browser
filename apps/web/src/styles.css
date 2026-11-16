@@ -1,0 +1,186 @@
+:root {
+  color-scheme: dark;
+  --bg: #0e0f12;
+  --panel: #181a20;
+  --border: #2a2d36;
+  --text: #e6e6e6;
+  --muted: #9aa0ab;
+  --accent: #d8a31a;
+  --error: #ff6b6b;
+  --ok: #6bcb77;
+  font-family: system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-areas:
+    "header header"
+    "stage sidebar";
+  gap: 16px;
+  padding: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+header { grid-area: header; }
+header h1 { margin: 0; color: var(--accent); }
+.stage { grid-area: stage; }
+.sidebar { grid-area: sidebar; display: flex; flex-direction: column; gap: 16px; }
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-areas: "header" "stage" "sidebar";
+  }
+}
+
+.game-screen {
+  background: #000;
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  border: 1px solid var(--border);
+}
+
+.game-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+}
+
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+}
+.panel h2 { margin: 0 0 8px; font-size: 1rem; }
+
+.hint { color: var(--muted); font-size: 0.85rem; }
+.error-text { color: var(--error); }
+.ok-text { color: var(--ok); }
+
+button {
+  background: #262a33;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+button:disabled { opacity: 0.4; cursor: default; }
+
+.status dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; }
+.status dt { color: var(--muted); }
+.status dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+.controls { width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 0.85rem; }
+.controls td, .controls th { padding: 2px 4px; text-align: left; }
+.controls .key { width: 100%; font-family: ui-monospace, monospace; font-size: 0.75rem; }
+
+.rom-report { max-height: 200px; overflow: auto; font-size: 0.8rem; padding-left: 16px; }
+
+.screen-wrapper { position: relative; }
+
+.player-badge,
+.call-to-action {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 14px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.75);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.player-badge { top: 8px; left: 12px; transform: none; color: var(--accent); font-weight: 600; }
+.call-to-action { bottom: 16px; font-size: 1.1rem; font-weight: 600; border: 1px solid var(--accent); }
+
+.notifications { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.notification {
+  display: flex;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border-left: 4px solid var(--muted);
+  background: var(--panel);
+  font-size: 0.9rem;
+}
+.notification:first-child { font-weight: 600; }
+.notification time { color: var(--muted); font-variant-numeric: tabular-nums; }
+.notification.success { border-left-color: var(--ok); }
+.notification.warning { border-left-color: var(--accent); }
+.notification.error { border-left-color: var(--error); }
+
+.status .you { color: var(--accent); font-weight: 600; }
+kbd { font-family: ui-monospace, monospace; border: 1px solid var(--border); border-radius: 3px; padding: 0 4px; }
+
+/* Fullscreen: the game screen keeps 4:3, centered on black, as large as the display allows. */
+.screen-wrapper:fullscreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+.screen-wrapper:fullscreen .game-screen {
+  width: min(100vw, calc(100vh * 4 / 3));
+  height: auto;
+  border: none;
+}
+.screen-wrapper:fullscreen .player-badge { top: 16px; left: 16px; }
+.screen-wrapper:fullscreen .call-to-action { bottom: 32px; font-size: 1.4rem; }
+
+.fullscreen-toast {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 80vw;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border-left: 4px solid var(--muted);
+  background: rgba(0, 0, 0, 0.8);
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+.fullscreen-toast.success { border-left-color: var(--ok); }
+.fullscreen-toast.warning { border-left-color: var(--accent); }
+.fullscreen-toast.error { border-left-color: var(--error); }
+
+/* Always-visible fullscreen control on the game screen (the toolbar may be below the fold). */
+.fullscreen-toggle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 1.2rem;
+  line-height: 1;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0.6;
+}
+.fullscreen-toggle:hover,
+.fullscreen-toggle:focus-visible { opacity: 1; }
+.screen-wrapper:fullscreen .fullscreen-toggle { top: 16px; right: 16px; }
+
+.link-button {
+  display: block;
+  margin-top: 4px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-size: 0.8rem;
+  text-decoration: underline;
+}
